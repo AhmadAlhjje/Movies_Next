@@ -14,7 +14,7 @@ export default function Navbar() {
         <div className="w-full sm:w-auto sm:min-w-[20rem]">
           <SearchBar basePath="/" />
         </div>
-      </div>
+      </div> 
     </nav>
   );
 }
