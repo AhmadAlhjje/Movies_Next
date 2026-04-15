@@ -1,4 +1,4 @@
-import { getMovies, searchMovies } from '@/lib/tmdb';
+import { GENRES, getMovies, searchMovies } from '@/lib/tmdb';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -12,6 +12,23 @@ type Movie = {
 interface HomeProps {
   searchParams: Promise<{ q?: string }>;
 }
+
+type GenreLink = {
+  slug: string;
+  label: string;
+  id: number;
+};
+
+const GENRE_LINKS: GenreLink[] = [
+  { slug: 'action', label: 'أكشن', id: GENRES.action },
+  { slug: 'horror', label: 'رعب', id: GENRES.horror },
+  { slug: 'comedy', label: 'كوميدي', id: GENRES.comedy },
+  { slug: 'romance', label: 'رومانسي', id: GENRES.romance },
+  { slug: 'drama', label: 'دراما', id: GENRES.drama },
+  { slug: 'animation', label: 'أنيميشن', id: GENRES.animation },
+  { slug: 'thriller', label: 'تشويق', id: GENRES.thriller },
+  { slug: 'science-fiction', label: 'خيال علمي', id: GENRES.scienceFiction },
+];
 
 export default async function Home({ searchParams }: HomeProps) {
   const { q = '' } = await searchParams;
@@ -28,7 +45,25 @@ export default async function Home({ searchParams }: HomeProps) {
             <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
               {hasSearched ? 'نتائج البحث' : 'أجدد الأفلام'}
             </h1>
-           
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Link
+                href={query ? `/?q=${encodeURIComponent(query)}` : '/'}
+                className="rounded-full border border-red-500/60 px-4 py-1 text-sm font-medium text-white transition"
+              >
+                الكل
+              </Link>
+              {GENRE_LINKS.map((item) => {
+                return (
+                  <Link
+                    key={item.slug}
+                    href={`/genre/${item.slug}`}
+                    className="rounded-full border border-slate-700 px-4 py-1 text-sm font-medium text-slate-300 transition hover:border-red-500/60 hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
           {hasSearched ? (
             results.length === 0 ? (
