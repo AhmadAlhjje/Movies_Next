@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useState, useTransition, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 interface SearchBarProps {
@@ -8,7 +8,7 @@ interface SearchBarProps {
   basePath?: string;
 }
 
-export default function SearchBar({ initialQuery = '', basePath = '/' }: SearchBarProps) {
+function SearchBarContent({ initialQuery = '', basePath = '/' }: SearchBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -65,5 +65,13 @@ export default function SearchBar({ initialQuery = '', basePath = '/' }: SearchB
         بحث
       </button>
     </form>
+  );
+}
+
+export default function SearchBar(props: SearchBarProps) {
+  return (
+    <Suspense fallback={<div className="h-10 w-full animate-pulse rounded-md bg-slate-800"></div>}>
+      <SearchBarContent {...props} />
+    </Suspense>
   );
 }
